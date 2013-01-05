@@ -1,0 +1,15 @@
+{
+  "name": "ascii-math",
+  "version": "0.0.0",
+  "description": "ascii-math to MathML conversion on the server side",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ForbesLindesay/ascii-math.git"
+  },
+  "author": "ForbesLindesay",
+  "license": "MIT"
+}

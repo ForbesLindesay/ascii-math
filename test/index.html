@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1>Demo</h1>
+    <h2>Using appendChild</h2>
+    <div id="appendChild"></div>
+    <h2>Using innerHTML</h2>
+    <div id="innerHTML"></div>
+    <script src="../build/build.js"></script>
+    <script>
+    (function () {
+      var parse = require('ascii-math');
+      function add(formula) {
+        var divA = document.createElement('div');
+        var divB = document.createElement('div');
+        var parsed = parse(formula);
+        divA.appendChild(parsed.toElement());
+        divB.innerHTML = parsed.toString();
+        document.getElementById('appendChild').appendChild(divA);
+        document.getElementById('innerHTML').appendChild(divB);
+      }
+      add('E=m c^2');
+      add('e^(i pi)=-1');
+      add('AA x in CC (sin^2x+cos^2x=1)');
+      add('sum_(i=1)^n i^3=((n(n+1))/2)^2');
+      add('[[a,b],[c,d]]((1,0),(0,1))');
+    }());
+    </script>
+  </body>
+</html>

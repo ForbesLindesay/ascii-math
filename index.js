@@ -1,33 +1,6 @@
-function parseMath(str) {
-  var frag, node;
-  AMnestingDepth = 0;
-  frag = AMparseExpr(str.replace(/^\s+/g, ""), false)[0];
-  node = createMmlNode("math", frag);
-  node.setAttribute("title", str.replace(/\s+/g, " "));
-  return node;
-}
+var ml = require('./lib/math-ml');
 
-module.exports = parseMath;
-
-function createMmlNode(t, frag) {
-  var node = document.createElementNS("http://www.w3.org/1998/Math/MathML", t);
-  if (typeof frag === 'string') frag = document.createTextNode(frag);
-  if (frag) node.appendChild(frag);
-  return node;
-}
-function createFragment() {
-  return document.createDocumentFragment();
-}
-
-var AMquote = {
-  input: "\"",
-  tag: "mtext",
-  output: "mbox",
-  tex: null,
-  ttype: TEXT
-};
-
-var tokenTypes = require('./token-types');
+var tokenTypes = require('./lib/token-types');
 var CONST = tokenTypes.CONST;
 var UNARY = tokenTypes.UNARY;
 var BINARY = tokenTypes.BINARY;
@@ -40,8 +13,43 @@ var DEFINITION = tokenTypes.DEFINITION;
 var LEFTRIGHT = tokenTypes.LEFTRIGHT;
 var TEXT = tokenTypes.TEXT;
 
-var AMsymbols = require('./symbols');
-var AMnames = AMsymbols.map(function (symbol) { return symbol.input; }); //list of input symbols
+var AMsymbols = require('./lib/symbols');
+var AMnames = AMsymbols.map(function (symbol) {
+  return symbol.input;
+}); //list of input symbols
+
+module.exports = parseMath;
+function parseMath(str) {
+  var frag, node;
+  AMnestingDepth = 0;
+  frag = AMparseExpr(str.replace(/^\s+/g, ""), false)[0];
+  node = createMmlNode("math", frag);
+  node.setAttribute("title", str.replace(/\s+/g, " "));
+  return node;
+}
+
+var useFakes = true;
+
+function createMmlNode(t, frag) {
+  var node = useFakes ? new ml.Node(t) : document.createElementNS("http://www.w3.org/1998/Math/MathML", t);
+  if (typeof frag === 'string') frag = useFakes ? new ml.Text(frag) : document.createTextNode(frag);
+  if (frag) node.appendChild(frag);
+  return node;
+}
+
+function createFragment() {
+  return useFakes ? new ml.Node('fragment') : document.createDocumentFragment();
+}
+
+var AMquote = {
+  input: "\"",
+  tag: "mtext",
+  output: "mbox",
+  tex: null,
+  ttype: TEXT
+};
+
+
 
 function AMremoveCharsAndBlanks(str, n) {
   //remove n characters and any following blanks
@@ -350,7 +358,7 @@ function AMparseIexpr(str) {
 
 function AMparseExpr(str, rightbracket) {
   var symbol, node, result, i,
-    newFrag = createFragment();
+  newFrag = createFragment();
   do {
     str = AMremoveCharsAndBlanks(str, 0);
     result = AMparseIexpr(str);
@@ -385,8 +393,11 @@ function AMparseExpr(str, rightbracket) {
             pos[i] = [];
             node = newFrag.childNodes[i];
             if (matrix) matrix = node.nodeName == "mrow" && (i == m - 1 || node.nextSibling.nodeName == "mo" && node.nextSibling.firstChild.nodeValue == ",") && node.firstChild.firstChild.nodeValue == left && node.lastChild.firstChild.nodeValue == right;
-            if (matrix) for (var j = 0; j < node.childNodes.length; j++)
-            if (node.childNodes[j].firstChild.nodeValue == ",") pos[i][pos[i].length] = j;
+            if (matrix) {
+              for (var j = 0; j < node.childNodes.length; j++) {
+                if (node.childNodes[j].firstChild.nodeValue == ",") pos[i][pos[i].length] = j;
+              }
+            }
             if (matrix && i > 1) matrix = pos[i].length == pos[i - 2].length;
           }
           if (matrix) {

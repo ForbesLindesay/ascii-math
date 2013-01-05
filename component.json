@@ -1,0 +1,17 @@
+{
+  "name": "ascii-math",
+  "repo": "ForbesLindesay/ascii-math",
+  "description": "",
+  "version": "0.0.1",
+  "keywords": [],
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "scripts": [
+    "index.js",
+    "lib/symbols.js",
+    "lib/token-types.js",
+    "lib/math-ml.js",
+    "lib/escape.js"
+  ]
+}
