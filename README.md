@@ -1,5 +1,7 @@
 # ascii-math
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ForbesLindesay/ascii-math.svg)](https://greenkeeper.io/)
+
 This is an implimentation of [asciimath](http://www1.chapman.edu/~jipsen/mathml/asciimath.html).  It lets you write plain text maths and have it be nicely formatted for you before display.  Since it's a server side sollution it offers a much nicer user experience than MathJax or the original asciimath did.  You can also use this function on the client if you prefer.
 
 ## Installation
